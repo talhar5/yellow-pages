@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply bg-opacity-0 bg-white backdrop-blur-lg hover:bg-opacity-10 text-gray-600;
+  @apply hover:text-gray-900 py-2 px-4 border border-gray-200 rounded-md;
+  @apply duration-100 font-semibold;
+  @apply hover:border-gray-600;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+/* Default container styles */
+.container-fluid {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
