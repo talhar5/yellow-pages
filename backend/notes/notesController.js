@@ -49,9 +49,10 @@ async function createNote(req, res) {
         }
         return res.status(201).json(savedNote);
     })
-}
+} 
 async function updateNote(req, res) {
     let { noteId, title, noteBody } = req.body;
+    console.log(noteBody)
     notesService.updateNote(noteId, { title, noteBody }, (err, updatedNote) => {
         if (err) {
             return res.status(500).json({

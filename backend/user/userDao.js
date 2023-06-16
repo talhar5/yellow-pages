@@ -1,4 +1,7 @@
 import User from "../models/User.js";
+
+
+// get all the registered users
 async function getUsers(done) {
     User.find()
         .then(data => {
@@ -11,7 +14,7 @@ async function getUsers(done) {
             })
         })
 }
-
+// to create new user in the database
 async function createUser({ name, email, password }, done) {
     let newUser = new User({
         name,
@@ -31,8 +34,9 @@ async function createUser({ name, email, password }, done) {
 
 }
 
+// to find a user by email
 async function findUserByEmail(email, done) {
-    User.findOne({ email })
+    User.findOne({ email: email.toLowerCase() })
         .then(data => {
             done(null, data);
         })
@@ -44,24 +48,25 @@ async function findUserByEmail(email, done) {
         })
 }
 
-async function findUserById(id, done) {
-    try {
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id
-            }
+// to update user details
+async function updateUser(userId, userDetails, done) {
+    User.findByIdAndUpdate(userId, userDetails, { new: true })
+        .then(data => {
+            done(null, data)
         })
-        return done(null, user);
-    } catch (err) {
-        return done(err);
-    }
+        .catch(err => {
+            done({
+                code: 500,
+                error: err
+            })
+        })
 }
+
 
 
 export default {
     getUsers,
     createUser,
     findUserByEmail,
-    findUserById
+    updateUser
 }

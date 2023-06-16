@@ -5,10 +5,19 @@ const userSchema = new Schema({
     email: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        lowercase: true
     },
     password: String,
-    
+    otp: {
+        type: String
+    },
+    isVerified: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
+
 })
 
 

@@ -35,10 +35,22 @@ function findUserById(id, done) {
 
 }
 
+function saveOtp(userId, otp, done) {
+    userDao.updateUser(userId, { otp: otp, isVerified: false }, (err, data) => {
+        if (err) return done(err);
+        done(null, data);
+    })
+}
+
+function updateUser(userId, userDetails, done) {
+    userDao.updateUser(userId, userDetails, done);
+}
 
 
 export default {
     createUser,
     findUserByEmail,
-    findUserById
+    findUserById,
+    saveOtp,
+    updateUser
 }

@@ -1,6 +1,7 @@
+import { config } from "../config.js";
 
 function setHeaders(req, res, next) {
-    const allowedOrigins = ['http://localhost:3000']; // Add more origins if needed
+    const allowedOrigins = [config.ORIGIN]; // Add more origins if needed
 
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {

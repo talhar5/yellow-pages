@@ -12,13 +12,14 @@ import connectDb from './utils/connectdb.js';
 import authenticateMiddleware from './middleware/authenticateMiddleware.js'
 import setHeaders from './middleware/setHeaders.js'
 
+
 // mouting middlewares
 app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: config.ORIGIN,
     credentials: true
 }));
 app.use(setHeaders);
@@ -32,7 +33,12 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/notes', authenticateMiddleware, notesRouter);
 
-connectDb();
-app.listen(config.PORT, () => {
-    console.log("Server is listening on port: ", config.PORT)
-})
+
+try {
+    connectDb();
+    app.listen(config.PORT, () => {
+        console.log("Server is listening on port: ", config.PORT)
+    })
+} catch (err) {
+    console.log(err)
+}
