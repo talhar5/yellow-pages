@@ -1,43 +1,47 @@
 import { Button } from '@chakra-ui/react'
 
 export default function TButton(props) {
+    console.log(props.disabled)
     function handleClick(e) {
         e.preventDefault();
         if (props.onClick) {
             props.onClick(e);
         }
     }
-    let darkClass = `
-                    px-4
-                    py-2
+
+    let commonStyles = `px-4
+                        py-2
+                        font-semibold
+                        duration-200 
+                        rounded-md
+                        cursor-pointer 
+                        disabled:cursor-default
+                        ${props.className}
+                        `;
+    let darkClass = `  
                     bg-gray-950
                     text-white
-                    font-semibold
-                    hover:bg-[#383838] 
-                    rounded-md 
-                    duration-200 
-                    cursor-pointer 
-                    ${props.className}`
+                    hover:bg-[#383838]
+                    disabled:bg-[#444444]
+                    `
 
     let lightClass = `
-                    px-4 
-                    py-2 
                     bg-white 
                     text-gray-700
-                    font-semibold
                     hover:text-gray-900
                     border
                     border-gray-200 
-                    rounded-md
                     hover:border-gray-600
-                    duration-200 
-                    cursor-pointer 
-                    ${props.className}`
+                    `
     return (
         <Button
             {...props}
             onClick={handleClick}
-            className={props.theme === 'dark' ? darkClass : lightClass}
+            className={props.theme === 'dark'
+                ?
+                `${commonStyles} ${darkClass}`
+                :
+                ` ${commonStyles} ${lightClass}`}
         >
 
         </Button>

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Note from './Note';
-import CreateButton from './CreateButton.js';
-import axiosCalls from '../helper/axiosCalls.js';
+import axiosCalls from '../../helper/axiosCalls.js';
 import {
     useToggleLoginContext,
     useLoginContext,
     useUserDetails
-} from './ApplicationContext'
+} from '../ApplicationContext'
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { addNote } from './notesSlice';
 
 export default function NotesList() {
     const navigate = useNavigate();

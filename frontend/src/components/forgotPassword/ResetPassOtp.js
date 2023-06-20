@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosCalls from '../helper/axiosCalls';
-import customToasts from '../helper/customToasters';
-import { useUserDetails } from './ApplicationContext';
-import InputField from './utils/InputField';
-import TButton from './utils/Button';
+import axiosCalls from '../../helper/axiosCalls';
+import customToasts from '../../helper/customToasters';
+import { useUserDetails } from '../ApplicationContext';
+import InputField from '../utils/InputField';
+import TButton from '../utils/Button';
 
 export default function ResetPassOtp() {
     // states
@@ -45,10 +45,10 @@ export default function ResetPassOtp() {
 
     }
     return (
-        <div className='w-full flex justify-center items-center  flex-col'>
-            <div className="w-[550px] md:w-[400px] bg-white shadow-sm sm:w-full mt-20 flex flex-col items-center border  ">
+        <div className='w-full flex justify-center items-center flex-col'>
+            <div className="w-[550px] md:w-[400px] py-8 bg-white shadow-sm sm:w-full mt-20 flex flex-col items-center border  ">
                 <div className='w-full flex'>
-                    <h2 className='text-2xl font-bold py-8  text-center mx-auto'>
+                    <h2 className='text-2xl font-bold   text-center mx-auto'>
                         Verify OTP
                     </h2>
                 </div>

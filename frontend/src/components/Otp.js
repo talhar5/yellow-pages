@@ -8,28 +8,29 @@ import Button from './utils/Button';
 
 
 export default function Otp() {
-    // states
     const [otp, setOtp] = useState('');
+    const [isVerifying, setIsVerifying] = useState(false)
     const navigate = useNavigate();
     const userDetails = useUserDetails();
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
-        customToasts.pending("Verifying");
-
+        setIsVerifying(true)
         axiosCalls.verifyOtp({ email: userDetails.email, otp })
             .then(data => {
-                customToasts.resolve("Email verified")
+                setIsVerifying(false)
                 console.log(data)
                 navigate("/login")
             })
             .catch(err => {
+                setIsVerifying(false)
                 console.log(err.response.status)
                 if (err.response.status === 400) {
-                    customToasts.reject("Invalid OTP")
+                    customToasts.error("Invalid OTP")
                 } else if (err.response.status === 500) {
-                    customToasts.reject("Internal Server Error")
+                    customToasts.error("Internal Server Error")
+                }else {
+                    customToasts.error("Some error has occured")
                 }
                 console.log(err)
             })
@@ -51,6 +52,7 @@ export default function Otp() {
                             An OTP has been sent to your email address. Please check your inbox/spam folder and enter the OTP in the field below.
                         </div>
                         <InputField
+                            disabled={isVerifying}
                             theme="light"
                             value={otp}
                             onChange={e => setOtp(e.target.value)}
@@ -60,6 +62,9 @@ export default function Otp() {
                     </div>
                     <div>
                         <Button
+                            disabled={isVerifying}
+                            isLoading={isVerifying}
+                            loadingText="Verifying"
                             theme="dark"
                             onClick={handleSubmit}
                             className='

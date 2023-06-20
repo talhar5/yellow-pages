@@ -11,12 +11,12 @@
 // }
 
 // for prod
-export const config = {
-    BASE_URL: "https://notes-appli.herokuapp.com",
-    ORIGIN: "https://notes-1talhapk.vercel.app/"
-}
-// for dev
 // export const config = {
-//     BASE_URL: "http://localhost:5000",
-//     ORIGIN: "http://localhost:3000"
+//     BASE_URL: "https://notes-appli.herokuapp.com",
+//     ORIGIN: "https://notes-1talhapk.vercel.app/"
 // }
+// for dev
+export const config = {
+    BASE_URL: "http://localhost:5000",
+    ORIGIN: "http://localhost:3000"
+}

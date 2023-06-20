@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosCalls from '../helper/axiosCalls';
-import validators from '../helper/validators';
-import customToasts from '../helper/customToasters';
-import { useUpdateUserDetails } from './ApplicationContext'
-import InputField from './utils/InputField';
-import Button from './utils/Button';
+import axiosCalls from '../../helper/axiosCalls';
+import validators from '../../helper/validators';
+import customToasts from '../../helper/customToasters';
+import { useUpdateUserDetails } from '../ApplicationContext'
+import InputField from '../utils/InputField';
+import Button from '../utils/Button';
 
 export default function ResetPassword() {
   // states

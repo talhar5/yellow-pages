@@ -29,11 +29,20 @@ function reject(text) {
     )
 }
 
+function error(text) {
+    toast.error(text, {toastId: customToastId})
+}
+function success(text) {
+    toast.success(text, {toastId: customToastId})
+}
+
 
 
 let customToasts = {
     pending,
     resolve,
     reject,
+    error,
+    success,
 }
 export default customToasts;

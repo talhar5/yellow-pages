@@ -1,17 +1,17 @@
-import CreateNewNote from './CreateNewNote';
-import Edit from "./Edit"
-import Login from './Login'
-import Register from './Register'
-import Error404 from './404'
+import CreateNewNote from './Notes/CreateNewNote';
+import Edit from "./Notes/Edit"
+import Login from './login/Login'
+import Register from './register/Register'
+import Error404 from './404/404'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Slide, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { ContextProvider } from './ApplicationContext'
 import Navbar from './Navbar'
 import Otp from './Otp';
-import ResetPassword from './ResetPassword';
-import ResetPassOtp from './ResetPassOtp';
-import CreatePassword from './CreatePassword'
+import ResetPassword from './forgotPassword/ResetPassword';
+import ResetPassOtp from './forgotPassword/ResetPassOtp';
+import CreatePassword from './forgotPassword/CreatePassword'
 import Home from './Home';
 
 

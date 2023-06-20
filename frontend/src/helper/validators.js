@@ -27,9 +27,51 @@ function validateName(name) {
 }
 
 function validatePassword(password) {
-    if (password.length < 5) {
+    if (password.length < 8) {
         toast.error(
-            "Password must have 6 characters",
+            "Password must have 8 characters minimum",
+            {
+                toastId: customToastId
+            }
+        )
+        return false;
+    }
+    if (!/[A-Z]/.test(password)) {
+        toast.error(
+            "Password must include a capital letter",
+            {
+                toastId: customToastId
+            }
+        )
+        return false
+    }
+    if (!/\d/.test(password)) {
+        toast.error(
+            "Password must include a number",
+            {
+                toastId: customToastId
+            }
+        )
+        return false
+    }
+    if (/\s/.test(password)) {
+        console.log(password)
+        
+        toast.error(
+            "Password must not include spaces",
+            {
+                toastId: customToastId
+            }
+        )
+        return false
+    }
+
+    return true;
+}
+function validateRepeatPasswordMatch({ password, repeatPassword }) {
+    if (password !== repeatPassword) {
+        toast.error(
+            "Passwords do not match",
             {
                 toastId: customToastId
             }
@@ -39,10 +81,11 @@ function validatePassword(password) {
     return true;
 }
 
-function validateRegistrationForm({ email, password, name }) {
+function validateRegistrationForm({ email, password, name, repeatPassword }) {
     if (!validateName(name)) return false;
     if (!validateEmail(email)) return false;
     if (!validatePassword(password)) return false;
+    if (!validateRepeatPasswordMatch({ password, repeatPassword })) return false
     return true;
 }
 function validateLoginForm({ email, password }) {

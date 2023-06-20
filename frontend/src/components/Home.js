@@ -1,4 +1,4 @@
-import NotesList from "./NotesList"
+import NotesList from "./Notes/NotesList"
 import SearchBar from "./SearchBar"
 import { useLoginContext } from "./ApplicationContext"
 import NoLogin from './NoLogin'

@@ -1,25 +1,43 @@
-import React, { useState, useRef } from 'react';
-import axiosCalls from '../helper/axiosCalls';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import axiosCalls from '../../helper/axiosCalls';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BsThreeDotsVertical, BsArrowLeft, BsCheck2 } from "react-icons/bs";
-import customToasts from '../helper/customToasters';
 import { Spinner } from '@chakra-ui/react'
+import customToasts from '../../helper/customToasters';
 
 export default function CreateNewNote() {
-    // states
-    const [noteBody, setNoteBody] = useState('');
+    const { noteId } = useParams()
+    const navigate = useNavigate();
+    // get note from notes context
     const [title, setTitle] = useState('');
+    const [noteBody, setNoteBody] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [isManuActive, setIdManuActive] = useState(false);
-    const [noteId, setNoteId] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
 
 
-    const navigate = useNavigate();
     const previousData = useRef({
         title: "",
         noteBody: ""
     });
+
+    useEffect(() => {
+        axiosCalls.getOneNote({ noteId })
+            .then(data => {
+                if (data.noteBody) {
+                    previousData.current.noteBody = data.noteBody;
+                    setNoteBody(data.noteBody);
+                }
+                if (data.title) {
+                    previousData.current.title = data.title;
+                    setTitle(data.title);
+                }
+                console.log(data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
 
     function deleteNote() {
         customToasts.pending("Deleting...")
@@ -35,20 +53,6 @@ export default function CreateNewNote() {
     }
 
 
-    function createNote() {
-        setIsSaving(true)
-        axiosCalls.createNote({ title, noteBody })
-            .then(data => {
-                setNoteId(data._id);
-                console.log(data);
-                setIsSaving(false)
-            })
-            .catch(err => {
-                setIsSaving(false)
-                console.log(err)
-            })
-
-    }
     function updateNote() {
         setIsSaving(true)
         axiosCalls.updateNote({ noteId, title, noteBody })
@@ -62,22 +66,11 @@ export default function CreateNewNote() {
             })
     }
 
-    const handleOnFocusInput = () => {
-        setIsTyping(true);
-    }
-
     function handleClickSave() {
-        if (noteId === null) {
-
-            createNote();
-            setIsTyping(false)
-        } else {
-            updateNote();
-            setIsTyping(false)
-        }
+        updateNote();
+        setIsTyping(false)
         previousData.current.noteBody = noteBody;
         previousData.current.title = title;
-
     }
 
 
@@ -89,23 +82,20 @@ export default function CreateNewNote() {
         navigate("/");
         handleClickSave();
     }
-
     function handleClickDelete() {
-        if (!isTyping && noteId) {
-            deleteNote()
-        }
         navigate("/")
+        deleteNote();
     }
 
     return (
-        <div className='w-full flex justify-center items-center mt-3 flex-col  '>
+        <div className='w-full flex justify-center items-center mt-3 flex-col'>
             <div className="w-[550px] md:w-[400px] sm:w-full rounded-md flex flex-col items-center border shadow-sm bg-white">
                 <div className='w-full  flex flex-row justify-between border-b items-center'>
-                    <div className=''>
+                    <div>
                         <BsArrowLeft className="h-full w-full p-3 text-2xl cursor-pointer" onClick={handleClickBack} />
                     </div>
-                    <h2 className='text-md text-gray-600 font-semibold text-center '>
-                        Create New Note
+                    <h2 className='text-md text-gray-600 font-semibold text-center'>
+                        Edit Note
                     </h2>
                     {isSaving
                         ?
@@ -114,7 +104,6 @@ export default function CreateNewNote() {
                         </div>
                         :
                         <div>
-
                             {isTyping && (noteBody.length !== 0 || title.length !== 0)
                                 ?
                                 <div className="" onClick={handleClickSave}>
@@ -137,7 +126,10 @@ export default function CreateNewNote() {
                                     '
                                         >
                                             <li
-                                                className='p-2 cursor-pointer'
+                                                className='
+                                            p-2
+                                            cursor-pointer
+                                            '
                                                 onClick={handleClickDelete}
                                             >
                                                 Delete
@@ -149,20 +141,22 @@ export default function CreateNewNote() {
                         </div>}
 
                 </div>
-                <div className='w-full px-10 '>
-                    <div className='w-full '>
+                <div className='w-full px-10'>
+                    <div className='w-full'>
                         <input
                             placeholder='Title'
-                            onFocus={handleOnFocusInput}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => {
+                                setTitle(e.target.value)
+                                setIsTyping(true)
+                            }}
                             value={title}
                             className='
-                                font-semibold
-                                text-lg
-                                p-3
-                                rounded-md
-                                w-full
-                                focus:outline-none'
+                            font-semibold
+                            text-lg
+                            p-3
+                            rounded-md
+                            w-full
+                            focus:outline-none'
                         />
                         <div className='text-gray-400 text-sm pl-3'>
                             <span>May 16 &nbsp; 16:04</span> | <span>{countCharacters(noteBody)}</span>
@@ -170,10 +164,12 @@ export default function CreateNewNote() {
                         </div>
                         <div className='mt-5'>
                             <textarea
-                                onChange={(e) => setNoteBody(e.target.value)}
-                                onFocus={handleOnFocusInput}
-                                value={noteBody}
+                                onChange={(e) => {
+                                    setNoteBody(e.target.value)
+                                    setIsTyping(true)
+                                }}
                                 rows={15}
+                                value={noteBody}
                                 className='
                                 p-3
                                 pt-1
@@ -182,8 +178,7 @@ export default function CreateNewNote() {
                                 focus:outline-none
                                 resize-none
                                 '
-                                autoFocus
-                                placeholder='Start typing...'
+                                placeholder='Start typing'
                             />
                         </div>
                     </div>

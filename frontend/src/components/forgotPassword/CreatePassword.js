@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosCalls from '../helper/axiosCalls';
-import customToasts from '../helper/customToasters';
-import { useUserDetails } from './ApplicationContext';
-import validators from '../helper/validators';
-import InputField from './utils/InputField';
-import TButton from './utils/Button';
+import axiosCalls from '../../helper/axiosCalls';
+import customToasts from '../../helper/customToasters';
+import { useUserDetails } from '../ApplicationContext';
+import validators from '../../helper/validators';
+import InputField from '../utils/InputField';
+import TButton from '../utils/Button';
 
 
 export default function CreatePassword() {

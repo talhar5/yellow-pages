@@ -32,6 +32,8 @@ export default function Navbar() {
                     flex
                     flex-row
                     justify-between
+                    sticky
+                    top-0
                    '>
                 <ul>
                     <li className='p-4 ml-3'>

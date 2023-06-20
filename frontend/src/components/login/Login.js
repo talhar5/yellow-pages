@@ -4,12 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   useToggleLoginContext,
   useUpdateUserDetails
-} from './ApplicationContext';
-import axiosCalls from '../helper/axiosCalls';
-import validators from '../helper/validators';
-import customToasts from '../helper/customToasters';
-import Button from './utils/Button'
-import InputField from './utils/InputField';
+} from '../ApplicationContext';
+import axiosCalls from '../../helper/axiosCalls';
+import validators from '../../helper/validators';
+import customToasts from '../../helper/customToasters';
+import Button from '../utils/Button'
+import InputField from '../utils/InputField';
 
 export default function Login() {
   const toggleLogin = useToggleLoginContext();
@@ -17,6 +17,9 @@ export default function Login() {
   // states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLogginIn, setIsLogginIn] = useState(false)
+  const [showPass, setShowPass] = useState(false);
+
   const navigate = useNavigate();
 
   // click login
@@ -24,9 +27,10 @@ export default function Login() {
     if (!validators.validateLoginForm({ email, password })) {
       return;
     };
-    customToasts.pending("Logging in")
+    setIsLogginIn(true)
     axiosCalls.loginUser({ email, password })
       .then(data => {
+        setIsLogginIn(false)
         console.log(data)
         localStorage.setItem("jwtToken", data.jwtToken);
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.jwtToken}`;
@@ -39,13 +43,15 @@ export default function Login() {
         navigate("/")
       })
       .catch(err => {
-        if (err.response?.status) {
-          customToasts.reject("Invalid Credentials")
+        setIsLogginIn(false)
+        if (err.response?.status === 400) {
+          customToasts.error("Invalid Credencials")
         }
+        customToasts.error("Some error Occured")
         console.log(err)
       })
   }
-  return ( 
+  return (
     <div className='w-full flex justify-center items-center  flex-col'>
       <div className="w-[550px] md:w-[400px] bg-white shadow-sm sm:w-full mt-20 flex flex-col items-center border ">
         <div className=' w-full flex'>
@@ -56,17 +62,41 @@ export default function Login() {
         <form className='space-y-6 w-3/4'>
           <div>
             <InputField
+              disabled={isLogginIn}
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value.trim())}
               placeholder='Email'
             />
           </div>
-          <div>
+          <div className='relative'> 
+            <div
+              onClick={() => { setShowPass(prev => !prev) }}
+              className='
+                      absolute 
+                      right-0 
+                      mx-2 
+                      py-1
+                      px-2
+                      rounded-md
+                      text-center 
+                      text-sm 
+                      translate-y-[50%] 
+                      cursor-pointer
+                      text-gray-700
+                      bg-gray-200
+                      hover:bg-gray-300
+                      duration-200
+                      select-none
+                      '
+            >
+              {showPass ? "Hide" : "Show"}
+            </div>
             <InputField
+              disabled={isLogginIn}
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value.trim())}
               placeholder='Password'
-              type='password'
+              type={showPass ? "text" : "password"}
             />
             <div
               className='
@@ -90,6 +120,9 @@ export default function Login() {
 
           <div>
             <Button
+              disabled={isLogginIn}
+              isLoading={isLogginIn}
+              loadingText="Logging in"
               theme="dark"
               onClick={handleSubmit}
               className='
@@ -98,6 +131,7 @@ export default function Login() {
                         '
               type='submit'
             >Login</Button>
+
             <div className='w-full 
                             text-center 
                             text-sm

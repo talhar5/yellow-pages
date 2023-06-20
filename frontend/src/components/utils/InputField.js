@@ -1,5 +1,6 @@
 
 export default function InputField(props) {
+
     let darkClass = `          
                     appearance-none
                     text-lg
@@ -7,7 +8,6 @@ export default function InputField(props) {
                     border
                     rounded-md
                     w-full
-                    placeholder:px-2
                     focus:border-gray-300 
                     focus:outline-none
                     ${props.className}`
@@ -19,14 +19,13 @@ export default function InputField(props) {
                     border
                     rounded-md
                     w-full
-                    placeholder:px-2
                     focus:border-gray-400 
                     focus:outline-none
                     ${props.className}`
     return (
-        <input
-            {...props}
-            className={props.theme === 'dark' ? darkClass : lightClass}
-        />
+            <input
+                {...props}
+                className={props.theme === 'dark' ? darkClass : lightClass}
+            />
     )
 }
