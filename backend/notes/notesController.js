@@ -1,10 +1,21 @@
 import notesService from "./notesService.js"
 
 async function getAllNotes(req, res) {
+    console.log('inside get all')
     let userId = req.claims.userId;
     notesService.getAllNotes(userId, (err, notes) => {
         if (err) return res.status(500).json(err);
-        return res.status(200).json(notes)
+        let notes_ = [...notes];
+        notes_.sort((a, b) => {
+            if (new Date(a.lastModified) > new Date(b.lastModified)) {
+                return 1;
+            } else if (new Date(a.lastModified) < new Date(b.lastModified)) {
+                return -1;
+            } else {
+                return 0;
+            }
+        })
+        return res.status(200).json(notes_)
     })
 }
 
@@ -49,7 +60,7 @@ async function createNote(req, res) {
         }
         return res.status(201).json(savedNote);
     })
-} 
+}
 async function updateNote(req, res) {
     let { noteId, title, noteBody } = req.body;
     console.log(noteBody)

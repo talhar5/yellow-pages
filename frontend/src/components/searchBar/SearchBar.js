@@ -2,7 +2,6 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
-    Spinner
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
@@ -12,6 +11,8 @@ import {
     BsPlus
 } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeCardType, changeSearchQuery } from './searchBarSlice';
 
 export default function SearchBar() {
     const [isInputActive, setIsInputActive] = useState(false);
@@ -26,7 +27,17 @@ export default function SearchBar() {
             return "desktop"
         }
     });
+    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const cardType = useSelector(state => state.searchBar.notesCardType)
+    const [isGridActive, setIsGridActive] = useState(() => {
+        if (cardType === 'grid') {
+            return true;
+        } else {
+            return false
+        }
+    })
 
     function handleClickCreateNote() {
         navigate("/create")
@@ -34,7 +45,6 @@ export default function SearchBar() {
     // to get screen width
     useEffect(() => {
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize)
         }
@@ -52,6 +62,19 @@ export default function SearchBar() {
         }
     }
 
+    function handleClickGrid() {
+        setIsGridActive(true)
+        dispatch(changeCardType('grid'))
+    }
+    function handleClickList() {
+        setIsGridActive(false)
+        dispatch(changeCardType('list'))
+    }
+    function handleChangeSearch(e) {
+        setSearchQuery(e.target.value)
+        dispatch(changeSearchQuery(e.target.value))
+    }
+
     return (
         <div
             className='
@@ -62,7 +85,7 @@ export default function SearchBar() {
             '
         >
             <div className={`flex-grow border  rounded-md bg-white ${isInputActive ? 'border-[#666666]' : 'border-[#eaeaea]'}`} >
-                <InputGroup className='w-full  h-full' >
+                <InputGroup className='w-full h-full' >
                     <InputLeftElement
                         pointerEvents='none'
                         className='relative'
@@ -74,6 +97,8 @@ export default function SearchBar() {
                     <Input
                         onFocus={() => setIsInputActive(true)}
                         onBlur={() => setIsInputActive(false)}
+                        onChange={handleChangeSearch}
+                        value={searchQuery}
                         className='w-full rounded-md h-full ml-10 pl-3 text-gray-700 focus:outline-none'
                         placeholder='Search...'
                     />
@@ -81,17 +106,40 @@ export default function SearchBar() {
             </div>
             <div className=' flex flex-row items-center justify-evenly bg-white border border-[#eaeaea] rounded-md '>
                 <div className='p-1'>
-                    <div className='bg-gray-200 p-2 rounded-sm'>
+                    <div
+                        onClick={handleClickGrid}
+                        className={`p-2 
+                        text-gray-800
+                        rounded-sm 
+                        duration-500 
+                        ${isGridActive
+                                ?
+                                "bg-gray-200"
+                                :
+                                "cursor-pointer hover:bg-gray-100"}`}
+                    >
                         <BsGrid />
                     </div>
                 </div>
-                <div className='p-3'>
+                <div
+                    onClick={handleClickList}
+                    className={`p-2
+                    text-gray-800
+                    mr-1 
+                    rounded-sm 
+                    duration-500 
+                    ${!isGridActive
+                            ?
+                            "bg-gray-200"
+                            :
+                            "cursor-pointer hover:bg-gray-100"}`}
+                >
                     <BsListUl />
                 </div>
             </div>
             <div
                 onClick={handleClickCreateNote}
-                className='px-6 md:px-5 sm:px-3 bg-gray-950 text-white rounded-md flex items-center justify-center hover:bg-[#383838] duration-200 cursor-pointer'>
+                className='px-6 md:px-5 sm:px-3 bg-gray-950 text-white rounded-md flex items-center justify-center hover:bg-[#383838] duration-200 cursor-pointer whitespace-nowrap'>
                 {
                     screenType === "mobile"
                         ?
@@ -99,7 +147,12 @@ export default function SearchBar() {
                             <BsPlus />
                         </div>
                         :
-                        "Add New Note"
+                        screenType === "desktop"
+                            ?
+                            "Add New Note"
+                            :
+                            "Add New"
+
                 }
             </div>
         </div >

@@ -1,45 +1,70 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Note from './Note';
+import NoteListView from './NoteListView';
 import axiosCalls from '../../helper/axiosCalls.js';
-import {
-    useToggleLoginContext,
-    useLoginContext,
-    useUserDetails
-} from '../ApplicationContext'
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import { addNote } from './notesSlice';
+import { addAllNote, } from './notesSlice';
+import { changeLoginStatus } from '../login/userSlice';
 
 export default function NotesList() {
     const navigate = useNavigate();
-    const toggleLogin = useToggleLoginContext();
-    const isLogin = useLoginContext();
-    const userDetails = useUserDetails();
-    const [notes, setNotes] = useState([]);
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    const userDetails = useSelector(state => state.user.userDetails);
+    const notes = useSelector(state => state.notes.notes)
+    const searchQuery = useSelector(state => state.searchBar.searchQuery);
+    const notesCardType = useSelector(state => state.searchBar.notesCardType)
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
-        if (!isLogin) return;
+        if (!isLoggedIn) return;
         axiosCalls.getAllNotes({ userId: userDetails.userId })
             .then(data => {
-                console.log(data)
                 let notes_ = [...data];
                 notes_.reverse();
-                setNotes(notes_)
+                dispatch(addAllNote(notes_))
             })
             .catch(err => {
                 console.log(err.response?.status)
                 if (err.response?.status === 401) {
                     localStorage.setItem("jwtToken", "")
-                    toggleLogin();
+                    dispatch(changeLoginStatus(false))
                     navigate("/login")
                 }
             })
     }, [])
+
+
+    let filteredNotes = notes.filter(item => {
+        if ((item.title.toLowerCase()).includes(searchQuery.toLowerCase()) || (item.noteBody.toLowerCase()).includes(searchQuery.toLowerCase())) {
+            return true;
+        } else {
+            return false;
+        }
+    })
+
     return (
         <div className=''>
-            <div className='grid gap-14  sm:gap-8 sm:grid-cols-1 grid-cols-3 md:grid-cols-2 '>
-                {notes.map(note => <Note key={note._id} note={note} />)}
+            <div
+                className={`
+                grid 
+                 
+                
+                ${notesCardType === 'grid'
+                        ?
+                        "sm:grid-cols-1 grid-cols-3 md:grid-cols-2 gap-14 sm:gap-8 "
+                        :
+                        "grid-cols-1 gap-6 sm:gap-4"}`
+                }>
+                {filteredNotes.map(note => {
+                    if (notesCardType === 'grid') {
+                        return <Note key={note._id} note={note} />
+                    } else {
+                        return <NoteListView key={note._id} note={note} />
+                    }
+                })}
             </div>
-        </div>
+        </div >
     )
 }

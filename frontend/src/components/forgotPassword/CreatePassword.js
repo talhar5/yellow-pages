@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axiosCalls from '../../helper/axiosCalls';
 import customToasts from '../../helper/customToasters';
-import { useUserDetails } from '../ApplicationContext';
+import { useSelector } from 'react-redux';
 import validators from '../../helper/validators';
 import InputField from '../utils/InputField';
 import TButton from '../utils/Button';
@@ -13,7 +13,7 @@ export default function CreatePassword() {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const navigate = useNavigate();
-    const userDetails = useUserDetails();
+    const userDetails = useSelector(state => state.user.userDetails);
 
     const handleSubmit = (e) => {
         e.preventDefault()

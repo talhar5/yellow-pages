@@ -9,6 +9,7 @@ export default function CreateNewNote() {
     // states
     const [noteBody, setNoteBody] = useState('');
     const [title, setTitle] = useState('');
+    const [noteDate, setNoteDate] = useState(new Date())
     const [isTyping, setIsTyping] = useState(false);
     const [isManuActive, setIdManuActive] = useState(false);
     const [noteId, setNoteId] = useState(null);
@@ -22,19 +23,16 @@ export default function CreateNewNote() {
     });
 
     function deleteNote() {
-        customToasts.pending("Deleting...")
         axiosCalls.deleteNote({ noteId })
             .then(data => {
-                customToasts.resolve("Deleted!")
+                customToasts.success("Deleted")
                 console.log(data)
             })
             .catch(err => {
-                customToasts.reject("aint gonna happen~")
+                customToasts.error("Couldn't delete")
                 console.log(err)
             })
     }
-
-
     function createNote() {
         setIsSaving(true)
         axiosCalls.createNote({ title, noteBody })
@@ -68,7 +66,6 @@ export default function CreateNewNote() {
 
     function handleClickSave() {
         if (noteId === null) {
-
             createNote();
             setIsTyping(false)
         } else {
@@ -96,6 +93,41 @@ export default function CreateNewNote() {
         }
         navigate("/")
     }
+    const months = {
+        0: 'January',
+        1: 'February',
+        2: 'March',
+        3: 'April',
+        4: 'May',
+        5: 'June',
+        6: 'July',
+        7: 'August',
+        8: 'September',
+        9: 'October',
+        10: 'November',
+        11: 'December'
+    }
+
+    let month = months[noteDate.getMonth()]
+    let date = noteDate.getDate();
+    if (date < 10) date = '0' + date
+
+    let hours = noteDate.getHours();
+    if (hours < 10) hours = '0' + hours
+
+    let minutes = noteDate.getMinutes();
+    if (minutes < 10) minutes = '0' + minutes
+
+    let year = noteDate.getFullYear();
+
+    let current_Date = new Date();
+    let currentYear = current_Date.getFullYear();
+    let isOlderThanAYear = currentYear > year;
+
+    // let currentMonth = months[current_Date.getMonth()]
+    // let currentDate = current_Date.getDate();
+    // let currentHours = current_Date.getHours();
+    // let currentMinutes = current_Date.getMinutes();
 
     return (
         <div className='w-full flex justify-center items-center mt-3 flex-col  '>
@@ -165,7 +197,7 @@ export default function CreateNewNote() {
                                 focus:outline-none'
                         />
                         <div className='text-gray-400 text-sm pl-3'>
-                            <span>May 16 &nbsp; 16:04</span> | <span>{countCharacters(noteBody)}</span>
+                            <span>{month} {date}{isOlderThanAYear && `, ${year}`} &nbsp; {hours}:{minutes}</span> | <span>{countCharacters(noteBody)}</span>
                             {countCharacters(noteBody) > 1 ? ' characters' : " character"}
                         </div>
                         <div className='mt-5'>

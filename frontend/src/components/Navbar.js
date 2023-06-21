@@ -1,24 +1,19 @@
 import React from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { Image } from '@chakra-ui/react'
-import {
-    useLoginContext,
-    useToggleLoginContext,
-    useUpdateUserDetails,
-} from './ApplicationContext'
+import { changeLoginStatus, addUserDetails } from './login/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 
 export default function Navbar() {
-
-    const isLogin = useLoginContext();
-    const toggleLogin = useToggleLoginContext();
-    const updateUserDetails = useUpdateUserDetails();
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     const navigate = useNavigate();
     function handleClickLogout() {
         localStorage.setItem("jwtToken", "");
-        toggleLogin()
-        updateUserDetails({ email: "", name: "" });
+        dispatch(changeLoginStatus(false))
+        dispatch(addUserDetails({ email: '', fullname: '' }))
         navigate("/login")
     }
     return (
@@ -34,6 +29,7 @@ export default function Navbar() {
                     justify-between
                     sticky
                     top-0
+                    z-10
                    '>
                 <ul>
                     <li className='p-4 ml-3'>
@@ -56,7 +52,7 @@ export default function Navbar() {
                     </li>
                 </ul>
                 <ul className='flex flex-row items-center px-4 sm:px-1'>
-                    {isLogin ? <>
+                    {isLoggedIn ? <>
                         <li className='m-2'>
                             <Link to="/login" className='btn' onClick={handleClickLogout}>
                                 Logout

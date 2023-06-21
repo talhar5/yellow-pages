@@ -14,6 +14,7 @@ export default function CreateNewNote() {
     const [isTyping, setIsTyping] = useState(false);
     const [isManuActive, setIdManuActive] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [lastModified, setLastModified] = useState(new Date());
 
 
     const previousData = useRef({
@@ -32,6 +33,7 @@ export default function CreateNewNote() {
                     previousData.current.title = data.title;
                     setTitle(data.title);
                 }
+                setLastModified(new Date(data.lastModified))
                 console.log(data)
             })
             .catch(err => {
@@ -86,6 +88,38 @@ export default function CreateNewNote() {
         navigate("/")
         deleteNote();
     }
+
+    const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ]
+    let month = months[lastModified.getMonth()]
+    let date = lastModified.getDate();
+    if (date < 10) date = '0' + date
+    let hours = lastModified.getHours();
+    if (hours < 10) hours = '0' + hours
+    
+    let minutes = lastModified.getMinutes();
+    if (minutes < 10) minutes = '0' + minutes
+
+    let year = lastModified.getFullYear();
+
+
+    let current_Date = new Date();
+    let currentYear = current_Date.getFullYear();
+
+    let showYear = currentYear > year;
+
 
     return (
         <div className='w-full flex justify-center items-center mt-3 flex-col'>
@@ -159,7 +193,7 @@ export default function CreateNewNote() {
                             focus:outline-none'
                         />
                         <div className='text-gray-400 text-sm pl-3'>
-                            <span>May 16 &nbsp; 16:04</span> | <span>{countCharacters(noteBody)}</span>
+                            <span>{month} {date}{showYear && `, ${year}`} &nbsp; {hours}:{minutes}</span> | <span>{countCharacters(noteBody)}</span>
                             {countCharacters(noteBody) > 1 ? ' characters' : " character"}
                         </div>
                         <div className='mt-5'>

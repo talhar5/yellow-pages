@@ -6,13 +6,12 @@ import Error404 from './404/404'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Slide, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { ContextProvider } from './ApplicationContext'
 import Navbar from './Navbar'
-import Otp from './Otp';
+import Otp from './register/Otp';
 import ResetPassword from './forgotPassword/ResetPassword';
 import ResetPassOtp from './forgotPassword/ResetPassOtp';
 import CreatePassword from './forgotPassword/CreatePassword'
-import Home from './Home';
+import Home from './home/Home';
 
 
 export default function App() {
@@ -67,7 +66,7 @@ export default function App() {
 
   ])
   return (
-    <ContextProvider>
+    <>
       <ToastContainer
         autoClose={2000}
         position='top-center'
@@ -77,6 +76,6 @@ export default function App() {
         transition={Slide}
       />
       <RouterProvider router={router} />
-    </ContextProvider>
+    </>
   )
 }

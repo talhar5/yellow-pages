@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosCalls from '../../helper/axiosCalls';
 import validators from '../../helper/validators';
 import customToasts from '../../helper/customToasters';
-import { useUpdateUserDetails } from '../ApplicationContext'
+import { addUserDetails } from '../login/userSlice';
+import { useDispatch } from 'react-redux';
 import Button from '../utils/Button'
 import InputField from '../utils/InputField';
 import PasswordGuide from './PasswordGuide';
@@ -20,14 +21,14 @@ export default function Register() {
   const [showRepeatPass, setShowRepeatPass] = useState(false);
   const [isSigningup, setIsSigningup] = useState(false);
   const navigate = useNavigate();
-  const updateUserDetails = useUpdateUserDetails();
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     if (!validators.validateRegistrationForm({ name, email, password, repeatPassword })) {
       return;
     };
     setIsSigningup(true);
-    updateUserDetails({ email, password, name })
+    dispatch(addUserDetails({ email, password, fullName: name }))
     axiosCalls.registerUser({ email, password, name })
       .then(data => {
         setIsSigningup(false);

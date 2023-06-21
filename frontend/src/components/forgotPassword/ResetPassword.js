@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axiosCalls from '../../helper/axiosCalls';
 import validators from '../../helper/validators';
 import customToasts from '../../helper/customToasters';
-import { useUpdateUserDetails } from '../ApplicationContext'
+import { addUserDetails } from '../login/userSlice';
+import { useDispatch } from 'react-redux';
 import InputField from '../utils/InputField';
 import Button from '../utils/Button';
 
@@ -11,7 +12,7 @@ export default function ResetPassword() {
   // states
   const [email, setEmail] = useState('');
   const [isLoading, setIsloading] = useState(false)
-  const updateUserDetails = useUpdateUserDetails();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // click login
@@ -22,7 +23,7 @@ export default function ResetPassword() {
       setIsloading(false)
       return;
     };
-    updateUserDetails({ email, password: "", name: "" })
+    dispatch(addUserDetails({ email, password: "", fullName: "" }))
     customToasts.pending("Sending OTP to your Email")
     console.log(email)
     axiosCalls.resetPassword({ email })
@@ -70,7 +71,7 @@ export default function ResetPassword() {
           </div>
           <div>
             <Button
-            theme="dark"
+              theme="dark"
               isLoading={isLoading}
               loadingText="verifying"
               onClick={handleSubmit}

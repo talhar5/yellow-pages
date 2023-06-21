@@ -1,14 +1,14 @@
-import NotesList from "./Notes/NotesList"
-import SearchBar from "./SearchBar"
-import { useLoginContext } from "./ApplicationContext"
-import NoLogin from './NoLogin'
+import NotesList from "../Notes/NotesList"
+import SearchBar from "../searchBar/SearchBar"
+import NoLogin from '../NoLogin'
+import { useSelector } from "react-redux"
 
 export default function Home() {
-    const isLogin = useLoginContext();
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     return (
         <>
             {
-                isLogin
+                isLoggedIn
                     ?
                     <div className=" mx-16 md:mx-6 sm:mx-6">
                         <SearchBar />

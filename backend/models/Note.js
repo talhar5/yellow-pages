@@ -7,6 +7,10 @@ const noteSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    lastModified: {
+        type: Date,
+        default: Date.now
     }
 })
 

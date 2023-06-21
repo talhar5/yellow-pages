@@ -4,7 +4,7 @@ import {
     BsPencilSquare
 } from 'react-icons/bs'
 
-export default function Note({ note }) {
+export default function NoteListView({ note }) {
     const navigate = useNavigate();
     function handleClickOpen() {
         console.log(note._id)
@@ -77,10 +77,9 @@ export default function Note({ note }) {
             <div className='hidden absolute top-0 right-0 border translate-x-[40%] -translate-y-[40%] group-hover:block duration-200 bg-black rounded-full text-white p-2'>
                 <BsPencilSquare />
             </div>
-            <div className='p-3 flex flex-col content-between h-full'>
-                <div>
-
-                    <h2 className='font-semibold truncate border-b mb-2'>
+            <div className='p-3 flex flex-row w-full items-center justify-between'>
+                <div className='flex flex-row w-[95%] md:w-[87%] sm:w-[80%] '>
+                    <h2 className='font-semibold pr-2 w-[120px] sm:w-[100px] truncate' >
                         {
                             note.title === ""
                                 ?
@@ -89,12 +88,12 @@ export default function Note({ note }) {
                                 note.title
                         }
                     </h2>
-                    <div className='text-gray-700 line-clamp-5'>
+                    <div className='text-gray-700 mx-2  truncate'>
                         {note.noteBody}
                     </div>
                 </div>
                 <div
-                    className=' text-gray-400 mt-3 text-sm '
+                    className=' text-gray-400 text-sm border-l-2 pl-1 whitespace-nowrap '
                 >
                     {showMonth ? `${month} ${date}${showYear ? `, ${year}` : ''}` : `${hours} : ${minutes}`}
                 </div>

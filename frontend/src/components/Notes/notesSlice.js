@@ -8,13 +8,13 @@ export const notesSlice = createSlice({
     name: 'notes',
     initialState,
     reducers: {
-        addNote: (state, action) => {
-            state.notes.unshift(action.payload);
-        },
+        addAllNote: (state, action) => {
+            state.notes = action.payload;
+        }
     }
 })
 
 
-export const { addNote } = notesSlice.actions;  
+export const { addAllNote } = notesSlice.actions;
 
 export default notesSlice.reducer;

@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosCalls from '../helper/axiosCalls';
-import customToasts from '../helper/customToasters';
-import { useUserDetails } from './ApplicationContext';
-import InputField from './utils/InputField';
-import Button from './utils/Button';
+import axiosCalls from '../../helper/axiosCalls';
+import customToasts from '../../helper/customToasters';
+import { useSelector } from 'react-redux';
+import InputField from '../utils/InputField';
+import Button from '../utils/Button';
 
 
 export default function Otp() {
     const [otp, setOtp] = useState('');
     const [isVerifying, setIsVerifying] = useState(false)
     const navigate = useNavigate();
-    const userDetails = useUserDetails();
+    const userDetails = useSelector(state => state.user.userDetails);
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -29,7 +29,7 @@ export default function Otp() {
                     customToasts.error("Invalid OTP")
                 } else if (err.response.status === 500) {
                     customToasts.error("Internal Server Error")
-                }else {
+                } else {
                     customToasts.error("Some error has occured")
                 }
                 console.log(err)

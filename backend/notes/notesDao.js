@@ -53,7 +53,7 @@ async function createNote({ title, noteBody, userId }, done) {
         })
 }
 async function updateNote(noteId, { title, noteBody }, done) {
-    Note.findOneAndUpdate({ _id: noteId }, { title, noteBody })
+    Note.findOneAndUpdate({ _id: noteId }, { title, noteBody, lastModified: new Date() })
         .then(updatedNote => {
             return done(null, updatedNote);
         })

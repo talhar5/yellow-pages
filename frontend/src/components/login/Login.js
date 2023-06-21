@@ -1,27 +1,25 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  useToggleLoginContext,
-  useUpdateUserDetails
-} from '../ApplicationContext';
 import axiosCalls from '../../helper/axiosCalls';
 import validators from '../../helper/validators';
 import customToasts from '../../helper/customToasters';
 import Button from '../utils/Button'
 import InputField from '../utils/InputField';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeLoginStatus, addUserDetails } from './userSlice';
 
 export default function Login() {
-  const toggleLogin = useToggleLoginContext();
-  const updateUserDetails = useUpdateUserDetails();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   // states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogginIn, setIsLogginIn] = useState(false)
   const [showPass, setShowPass] = useState(false);
-
   const navigate = useNavigate();
 
+  console.log("isLoggedin from store: ", isLoggedIn)
   // click login
   const handleSubmit = () => {
     if (!validators.validateLoginForm({ email, password })) {
@@ -34,11 +32,8 @@ export default function Login() {
         console.log(data)
         localStorage.setItem("jwtToken", data.jwtToken);
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.jwtToken}`;
-        updateUserDetails({
-          email: data.userDetails.email,
-          userId: data.userDetails.userId
-        })
-        toggleLogin();
+        dispatch(addUserDetails(data.userDetails))
+        dispatch(changeLoginStatus(true))
         customToasts.resolve("Success")
         navigate("/")
       })
@@ -68,7 +63,7 @@ export default function Login() {
               placeholder='Email'
             />
           </div>
-          <div className='relative'> 
+          <div className='relative'>
             <div
               onClick={() => { setShowPass(prev => !prev) }}
               className='
